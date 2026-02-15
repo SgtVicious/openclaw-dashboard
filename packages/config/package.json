@@ -1,0 +1,13 @@
+{
+  "name": "@mission-control/config",
+  "version": "1.0.0",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "license": "MIT",
+  "files": [
+    "eslint-next.js",
+    "eslint-react.js",
+    "typescript-config",
+    "tailwind-config.js"
+  ]
+}

@@ -1,0 +1,222 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts            Account[]
+  sessions            Session[]
+  dashboards          Dashboard[]
+  activities          Activity[]
+  notifications       Notification[]
+  teamMemberships     TeamMember[]
+  ownedTeams          Team[]
+  alerts              Alert[]
+  
+  @@map("users")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Dashboard {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  isPublic    Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  userId      String
+  
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  widgets Widget[]
+  
+  @@map("dashboards")
+}
+
+model Widget {
+  id         String          @id @default(cuid())
+  type       WidgetType
+  title      String
+  config     Json
+  position   Json
+  size       Json
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  dashboardId String
+  
+  dashboard Dashboard @relation(fields: [dashboardId], references: [id], onDelete: Cascade)
+  
+  @@map("widgets")
+}
+
+model Activity {
+  id        String   @id @default(cuid())
+  type      ActivityType
+  action    String
+  target    String
+  metadata  Json?
+  createdAt DateTime @default(now())
+  userId    String
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("activities")
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  title     String
+  message   String
+  type      NotificationType
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  userId    String
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("notifications")
+}
+
+model Team {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  ownerId     String
+  
+  owner       User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  memberships TeamMember[]
+  
+  @@map("teams")
+}
+
+model TeamMember {
+  id        String       @id @default(cuid())
+  role      TeamRole     @default(MEMBER)
+  createdAt DateTime     @default(now())
+  userId    String
+  teamId    String
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, teamId])
+  @@map("team_members")
+}
+
+model Alert {
+  id          String      @id @default(cuid())
+  title       String
+  description String
+  severity    AlertSeverity
+  isActive    Boolean     @default(true)
+  conditions  Json
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  userId      String
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("alerts")
+}
+
+model Metric {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  unit        String?
+  value       Float
+  timestamp   DateTime @default(now())
+  metadata    Json?
+  
+  @@map("metrics")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum WidgetType {
+  METRIC
+  CHART
+  TABLE
+  ALERT
+  TEXT
+}
+
+enum ActivityType {
+  CREATE
+  UPDATE
+  DELETE
+  SHARE
+  COMMENT
+}
+
+enum NotificationType {
+  INFO
+  WARNING
+  ERROR
+  SUCCESS
+}
+
+enum TeamRole {
+  MEMBER
+  ADMIN
+  OWNER
+}
+
+enum AlertSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
