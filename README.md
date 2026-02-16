@@ -1,108 +1,82 @@
-# Mission Control
+# Mission Control - Factory Floor Dashboard
 
-A modern, AI-driven business operations management dashboard built with React and Next.js. Deploy instantly on Vercel or self-host with Docker.
+Open-source mission control dashboard for AI agent monitoring and project management. Built with React + Vite for Eric's multi-venture AI-driven operation.
 
-## 🚀 Features
+## 🏭 Factory Floor Concept
 
-- **Real-time Operations Dashboard** - Monitor key business metrics and KPIs
-- **AI-Powered Insights** - Intelligent recommendations and anomaly detection
-- **Team Collaboration** - Integrated communication and task management
-- **Customizable Widgets** - Flexible dashboard components
-- **API Integration** - RESTful endpoints for real-time data
-- **Multi-tenant Support** - Scalable architecture for teams
-- **Dark/Light Themes** - Modern UI with theme switching
-- **Mobile Responsive** - Works seamlessly on all devices
+Visualize your AI agents and business operations like looking over a factory floor - see who's working, who's idle, and what they're producing in real-time.
 
-## 🛠️ Tech Stack
+## ✨ Features
 
-- **Frontend**: Next.js 14, React 18, TypeScript, Tailwind CSS
-- **Backend**: Next.js API Routes, Prisma ORM
-- **Database**: PostgreSQL (with SQLite for development)
-- **Authentication**: NextAuth.js
-- **Deployment**: Vercel (primary), Docker (self-hosted)
-- **Styling**: Tailwind CSS, Radix UI Components
-- **Charts**: Recharts for data visualization
-- **Real-time**: WebSocket support via Socket.io
+- **Real-time Agent Monitoring**: Live status of all AI sub-agents
+- **Factory Floor Visualization**: Office-style overview with working/idle indicators  
+- **Business Venture Tracking**: BodyPulse, TradeNavAI, Sourdough, Farm operations
+- **Live Activity Feed**: Real-time updates on agent tasks and progress
+- **Performance Metrics**: Efficiency, uptime, task completion tracking
+- **Mobile Responsive**: Works on all devices
+- **Open Source**: MIT licensed, ready for community contributions
 
-## 📦 Quick Start
-
-### Deploy to Vercel (Recommended)
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/mission-control)
-
-1. Click the button above
-2. Configure your environment variables
-3. Deploy in under 2 minutes
-
-### Local Development
+## 🚀 Quick Start
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/mission-control.git
-cd mission-control
-
-# Install dependencies
 npm install
-
-# Set up environment variables
-cp .env.example .env.local
-
-# Run database migrations
-npm run db:push
-
-# Start development server
 npm run dev
 ```
 
-### Docker Setup
+## 🏗️ Architecture
 
-```bash
-# Build and run with Docker
-docker-compose up -d
+- **Frontend**: React 18 + Vite
+- **Styling**: Factory-themed CSS with dark mode
+- **State**: React hooks for real-time updates
+- **Icons**: Lucide React
+- **Charts**: Recharts for metrics visualization
+- **Deployment**: Vercel ready
 
-# Access the application
-open http://localhost:3000
-```
+## 📊 Dashboard Sections
 
-## 📚 Documentation
+1. **Factory Floor** - Live agent status and current tasks
+2. **Control Panel** - Quick actions and venture shortcuts  
+3. **Performance Stats** - Key metrics and efficiency tracking
+4. **Activity Feed** - Real-time operation updates
 
-- [Installation Guide](docs/installation.md)
-- [API Documentation](docs/api-endpoints.md)
-- [Deployment Guide](docs/deployment.md)
-- [Contributing Guidelines](CONTRIBUTING.md)
-- [Troubleshooting](docs/troubleshooting.md)
-- [Demo Data Setup](docs/demo-data.md)
+## 🎯 Use Cases
+
+- **Multi-Venture Management**: Track all business operations in one view
+- **AI Agent Monitoring**: See what each sub-agent is working on
+- **Production Oversight**: Factory floor view of your AI-driven company
+- **Investor Dashboard**: Professional overview for funding presentations
+
+## 🔧 Customization
+
+Easy to modify for your specific ventures:
+- Update agent configurations in `src/App.jsx`
+- Modify styling in `src/styles/index.css`
+- Add new ventures by extending the agents array
+
+## 📱 Mobile Experience
+
+Responsive design that works perfectly on phones and tablets for on-the-go monitoring.
+
+## 🎨 Design Philosophy
+
+Factory floor aesthetic with:
+- Industrial color palette (oranges, grays, dark tones)
+- Status indicators (working/idle/error states)
+- Real-time feel with subtle animations
+- Professional but functional layout
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-### Quick Contributing Steps
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Submit a pull request
+Open source and ready for community contributions. Submit PRs for:
+- New agent types
+- Additional metrics
+- UI improvements
+- Performance optimizations
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🆘 Support
-
-- 📖 [Documentation](https://docs.mission-control.dev)
-- 🐛 [Issue Tracker](https://github.com/yourusername/mission-control/issues)
-- 💬 [Discord Community](https://discord.gg/mission-control)
-- 📧 [Email Support](support@mission-control.dev)
-
-## 🙏 Acknowledgments
-
-- Built with modern web technologies
-- Inspired by business intelligence tools
-- Community-driven development
-- Open-source friendly
+MIT License - free for commercial and personal use.
 
 ---
 
-**Star ⭐ this repository if you find it helpful!**
+**Built for Eric's AI-driven multi-venture operation** - Mission Control keeps the factory floor running smoothly.

@@ -1,28 +1,515 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/mission-control-icon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Mission Control Dashboard - Monitor and manage your projects in real-time" />
-    <meta name="keywords" content="mission control, dashboard, project management, monitoring" />
-    <meta name="author" content="Mission Control Team" />
-    
-    <!-- Security Headers -->
-    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <meta http-equiv="X-Frame-Options" content="DENY" />
-    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
-    
-    <!-- Open Graph -->
-    <meta property="og:title" content="Mission Control Dashboard" />
-    <meta property="og:description" content="Monitor and manage your projects in real-time with our open-source mission control dashboard" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://mission-control.vercel.app" />
-    
-    <title>Mission Control Dashboard</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Control - Factory Floor Dashboard</title>
+    <style>
+        /* Factory Floor Dashboard - Emergency Deployment Version */
+        :root {
+            --factory-gray: #2a2a2a;
+            --factory-dark: #1a1a1a;
+            --factory-light: #3a3a3a;
+            --factory-accent: #ff6b35;
+            --factory-green: #4caf50;
+            --factory-yellow: #ffc107;
+            --factory-red: #f44336;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --border-color: #404040;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, var(--factory-dark) 0%, var(--factory-gray) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .factory-floor {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            grid-template-rows: 60px 1fr 60px;
+            grid-template-areas: 
+                "sidebar header"
+                "sidebar main"
+                "sidebar footer";
+            height: 100vh;
+            gap: 1px;
+            background: var(--border-color);
+        }
+
+        .factory-header {
+            grid-area: header;
+            background: var(--factory-gray);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .factory-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--factory-accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+        }
+
+        .factory-status {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--factory-green);
+            box-shadow: 0 0 10px var(--factory-green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .factory-sidebar {
+            grid-area: sidebar;
+            background: var(--factory-dark);
+            padding: 20px;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .factory-main {
+            grid-area: main;
+            background: var(--factory-gray);
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .control-panel {
+            background: var(--factory-light);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .control-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--factory-accent);
+        }
+
+        .control-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control-button {
+            background: var(--factory-accent);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .control-button:hover {
+            background: #ff8555;
+            transform: translateY(-2px);
+        }
+
+        .factory-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--factory-light);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--factory-accent);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .agent-card {
+            background: var(--factory-light);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .agent-card:hover {
+            border-color: var(--factory-accent);
+        }
+
+        .agent-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .agent-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .agent-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .agent-task {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .agent-metrics {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+        }
+
+        .metric {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .metric-value {
+            font-weight: 600;
+            color: var(--factory-accent);
+        }
+
+        .activity-feed {
+            margin-top: 24px;
+        }
+
+        .activity-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--factory-accent);
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--factory-light);
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .activity-icon {
+            width: 16px;
+            height: 16px;
+            color: var(--factory-green);
+        }
+
+        .activity-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            flex: 1;
+        }
+
+        .activity-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .factory-footer {
+            grid-area: footer;
+            background: var(--factory-dark);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .status-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .status-online {
+            color: var(--factory-green);
+        }
+
+        /* Agent Status Colors */
+        .status-working { color: var(--factory-green); }
+        .status-idle { color: var(--text-secondary); }
+        .status-error { color: var(--factory-red); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .factory-floor {
+                grid-template-columns: 1fr;
+                grid-template-areas: 
+                    "header"
+                    "main"
+                    "footer";
+            }
+            
+            .factory-sidebar {
+                display: none;
+            }
+            
+            .factory-main {
+                padding: 16px;
+            }
+            
+            .factory-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="factory-floor">
+        <!-- Header -->
+        <header class="factory-header">
+            <div class="factory-title">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
+                    <path d="M2 20h20"/><path d="M4 16V4m4 12V8m4 8V4m4 12V8m4 8V4"/>
+                </svg>
+                MISSION CONTROL
+            </div>
+            <div class="factory-status">
+                <div class="status-indicator"></div>
+                <span>FACTORY ACTIVE</span>
+                <span class="text-sm text-gray-400" id="current-time"></span>
+            </div>
+        </header>
+
+        <!-- Sidebar - Control Panel -->
+        <aside class="factory-sidebar">
+            <div class="control-panel">
+                <h3 class="control-title">CONTROL PANEL</h3>
+                <div class="control-buttons">
+                    <button class="control-button" onclick="handleControl('bodypulse')">🚀 BodyPulse</button>
+                    <button class="control-button" onclick="handleControl('tradenav')">📊 TradeNav</button>
+                    <button class="control-button" onclick="handleControl('sourdough')">🍞 Sourdough</button>
+                    <button class="control-button" onclick="handleControl('farm')">🚜 Farm</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="factory-main">
+            <!-- Factory Stats -->
+            <div class="factory-stats">
+                <div class="stat-card">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Active Agents</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">47</div>
+                    <div class="stat-label">Tasks Today</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">$2,847</div>
+                    <div class="stat-label">Revenue</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">87%</div>
+                    <div class="stat-label">Efficiency</div>
+                </div>
+            </div>
+
+            <!-- Agent Floor -->
+            <div style="margin-bottom: 24px;">
+                <h2 style="font-size: 20px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    FACTORY FLOOR - LIVE STATUS
+                </h2>
+                
+                <div style="display: grid; gap: 12px;">
+                    <!-- BodyPulse Dev Agent -->
+                    <div class="agent-card" style="border-left: 3px solid var(--factory-accent);">
+                        <div class="agent-header">
+                            <div class="agent-name">🚀 BodyPulse Dev Agent</div>
+                            <div class="agent-status">
+                                <svg class="status-working" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                                </svg>
+                                <span class="capitalize">working</span>
+                            </div>
+                        </div>
+                        <div class="agent-task">Building authentication system</div>
+                        <div class="agent-metrics">
+                            <div class="metric"><span class="metric-value">75%</span><span>Progress</span></div>
+                            <div class="metric"><span>2 min ago</span></div>
+                            <div class="metric"><span>development</span></div>
+                        </div>
+                    </div>
+
+                    <!-- TradeNavAI Research -->
+                    <div class="agent-card">
+                        <div class="agent-header">
+                            <div class="agent-name">📊 TradeNavAI Research</div>
+                            <div class="agent-status">
+                                <svg class="status-idle" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                <span class="capitalize">idle</span>
+                            </div>
+                        </div>
+                        <div class="agent-task">Market analysis complete</div>
+                        <div class="agent-metrics">
+                            <div class="metric"><span class="metric-value">100%</span><span>Progress</span></div>
+                            <div class="metric"><span>5 min ago</span></div>
+                            <div class="metric"><span>research</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Sourdough Ops Agent -->
+                    <div class="agent-card" style="border-left: 3px solid var(--factory-green);">
+                        <div class="agent-header">
+                            <div class="agent-name">🍞 Sourdough Ops Agent</div>
+                            <div class="agent-status">
+                                <svg class="status-working" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                                </svg>
+                                <span class="capitalize">working</span>
+                            </div>
+                        </div>
+                        <div class="agent-task">Processing weekend orders</div>
+                        <div class="agent-metrics">
+                            <div class="metric"><span class="metric-value">45%</span><span>Progress</span></div>
+                            <div class="metric"><span>1 min ago</span></div>
+                            <div class="metric"><span>operations</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Farm Management -->
+                    <div class="agent-card" style="border-left: 3px solid var(--factory-yellow);">
+                        <div class="agent-header">
+                            <div class="agent-name">🚜 Farm Management</div>
+                            <div class="agent-status">
+                                <svg class="status-working" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                                </svg>
+                                <span class="capitalize">working</span>
+                            </div>
+                        </div>
+                        <div class="agent-task">Equipment maintenance scheduling</div>
+                        <div class="agent-metrics">
+                            <div class="metric"><span class="metric-value">60%</span><span>Progress</span></div>
+                            <div class="metric"><span>3 min ago</span></div>
+                            <div class="metric"><span>management</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Feed -->
+            <div>
+                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 16px; color: var(--factory-accent);">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
+                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
+                    </svg>
+                    LIVE ACTIVITY FEED
+                </h3>
+                <div style="display: grid; gap: 8px;">
+                    <div class="activity-item">
+                        <svg class="activity-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        <span class="activity-text">BodyPulse auth system: 75% complete</span>
+                        <span class="activity-time">2 min ago</span>
+                    </div>
+                    <div class="activity-item">
+                        <svg class="activity-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                        </svg>
+                        <span class="activity-text">TradeNavAI analyzing market trends</span>
+                        <span class="activity-time">5 min ago</span>
+                    </div>
+                    <div class="activity-item">
+                        <svg class="activity-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        <span class="activity-text">Sourdough weekend orders processed</span>
+                        <span class="activity-time">8 min ago</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="factory-footer">
+            <div class="status-text">
+                System Status: <span class="status-online">ONLINE</span>
+            </div>
+            <div class="status-text">
+                Mission Control v1.0.0 | Factory Floor Active
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Real-time clock update
+        function updateTime() {
+            document.getElementById('current-time').textContent = new Date().toLocaleTimeString();
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        // Control panel handlers
+        function handleControl(action) {
+            console.log('Control action:', action);
+            // Add your control logic here
+            alert(`Control action: ${action} - Connect to your backend API`);
+        }
+    </script>
+</body>
 </html>
